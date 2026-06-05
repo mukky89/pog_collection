@@ -5,6 +5,72 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+const DICEBEAR = "https://api.dicebear.com/9.x";
+const PLACEHOLDER = "/placeholder-pog.svg";
+
+/** Farebné palety pozadia milkcap skinu podľa vzácnosti (DiceBear). */
+const SKIN_PALETTES: Record<string, string> = {
+  common: "cbd5e1,e2e8f0,94a3b8",
+  uncommon: "a7f3d0,6ee7b7,34d399",
+  rare: "93c5fd,60a5fa,3b82f6",
+  "ultra-rare": "f0abfc,e879f9,c084fc,a78bfa",
+};
+
+/**
+ * Vygeneruje URL na originálny „milkcap" skin POG-u cez DiceBear (štýl rings).
+ * Seed zaručuje, že rovnaký POG má vždy rovnaký skin.
+ */
+export function pogSkinUrl(
+  seed: string,
+  rarity: string = "common",
+  variant: string = ""
+): string {
+  const bg = SKIN_PALETTES[rarity] ?? SKIN_PALETTES.common;
+  const params = new URLSearchParams({
+    seed: variant ? `${seed}#${variant}` : seed,
+    backgroundColor: bg,
+    backgroundType: rarity === "ultra-rare" ? "gradientLinear" : "solid",
+    radius: "50",
+  });
+  return `${DICEBEAR}/rings/svg?${params.toString()}`;
+}
+
+/** Skin pre obal kolekcie (farebné geometrické tvary). */
+export function collectionCoverUrl(seed: string): string {
+  const params = new URLSearchParams({
+    seed,
+    backgroundType: "gradientLinear",
+  });
+  return `${DICEBEAR}/shapes/svg?${params.toString()}`;
+}
+
+/** Vráti reálny obrázok POG-u, alebo vygenerovaný skin ak žiadny nie je. */
+export function pogImageSrc(pog: {
+  imageUrl?: string;
+  name?: string;
+  number?: number;
+  rarity?: string;
+}): string {
+  const url = pog.imageUrl?.trim();
+  if (url && url !== PLACEHOLDER && !url.endsWith("placeholder-pog.svg")) {
+    return url;
+  }
+  return pogSkinUrl(`${pog.name ?? "pog"}-${pog.number ?? 0}`, pog.rarity);
+}
+
+/** Vráti obal kolekcie, alebo vygenerovaný skin ak žiadny nie je. */
+export function collectionImageSrc(collection: {
+  coverImage?: string;
+  name?: string;
+  slug?: string;
+}): string {
+  const url = collection.coverImage?.trim();
+  if (url && url !== PLACEHOLDER && !url.endsWith("placeholder-pog.svg")) {
+    return url;
+  }
+  return collectionCoverUrl(collection.slug || collection.name || "collection");
+}
+
 /** Naformátuje cenu uloženú v centoch na €, napr. 150 -> "1,50 €" */
 export function formatPrice(cents: number | undefined | null): string {
   const value = (cents ?? 0) / 100;

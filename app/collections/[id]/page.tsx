@@ -6,7 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
 import { DbErrorState } from "@/components/EmptyState";
 import { getCollectionById, getPogsForCollection } from "@/lib/queries";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, collectionImageSrc } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -41,7 +41,7 @@ export default async function CollectionDetailPage({
         <div className="grid gap-0 md:grid-cols-[300px_1fr]">
           <div className="relative aspect-video md:aspect-auto md:h-full bg-secondary">
             <Image
-              src={collection.coverImage || "/placeholder-pog.svg"}
+              src={collectionImageSrc(collection)}
               alt={collection.name}
               fill
               sizes="300px"

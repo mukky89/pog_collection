@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { OwnedToggle } from "@/components/OwnedToggle";
 import {
   formatPrice,
+  pogImageSrc,
   RARITY_LABELS,
   RARITY_STYLES,
   RARITY_RING,
@@ -27,7 +28,7 @@ export function PogCard({ pog }: { pog: PogWithOwnership }) {
           )}
         >
           <Image
-            src={pog.imageUrl || "/placeholder-pog.svg"}
+            src={pogImageSrc(pog)}
             alt={pog.name}
             fill
             sizes="(max-width: 768px) 50vw, 200px"

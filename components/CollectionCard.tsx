@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, collectionImageSrc } from "@/lib/utils";
 import { Trophy } from "lucide-react";
 import type { CollectionWithStats } from "@/types";
 
@@ -17,7 +17,7 @@ export function CollectionCard({
       <Card className="group h-full animate-pop-in overflow-hidden border-2 pog-shadow-hover">
         <div className="relative aspect-[16/9] overflow-hidden bg-secondary">
           <Image
-            src={collection.coverImage || "/placeholder-pog.svg"}
+            src={collectionImageSrc(collection)}
             alt={collection.name}
             fill
             sizes="(max-width: 768px) 100vw, 400px"

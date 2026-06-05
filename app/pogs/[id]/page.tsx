@@ -8,6 +8,8 @@ import { DbErrorState } from "@/components/EmptyState";
 import { getPogById, getSimilarPogs } from "@/lib/queries";
 import {
   formatPrice,
+  pogImageSrc,
+  pogSkinUrl,
   RARITY_LABELS,
   RARITY_STYLES,
   cn,
@@ -50,8 +52,11 @@ export default async function PogDetailPage({
 
       <div className="grid gap-8 md:grid-cols-2">
         <PogImageViewer
-          front={pog.imageUrl}
-          back={pog.imageBackUrl}
+          front={pogImageSrc(pog)}
+          back={
+            pog.imageBackUrl ||
+            pogSkinUrl(`${pog.name}-${pog.number}`, pog.rarity, "back")
+          }
           alt={pog.name}
           rarity={pog.rarity}
         />

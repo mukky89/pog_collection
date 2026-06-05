@@ -8,6 +8,7 @@ import { OwnedToggle } from "@/components/OwnedToggle";
 import { Button } from "@/components/ui/button";
 import {
   formatPrice,
+  pogImageSrc,
   RARITY_LABELS,
   RARITY_STYLES,
   cn,
@@ -74,10 +75,10 @@ export function PogGrid({
             <div key={pog._id} className="flex items-center gap-4 p-3">
               <Link
                 href={`/pogs/${pog._id}`}
-                className="relative h-14 w-14 shrink-0 overflow-hidden rounded-md bg-secondary"
+                className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border-2 bg-secondary"
               >
                 <Image
-                  src={pog.imageUrl || "/placeholder-pog.svg"}
+                  src={pogImageSrc(pog)}
                   alt={pog.name}
                   fill
                   sizes="56px"
