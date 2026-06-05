@@ -6,6 +6,7 @@ import { OwnedToggle } from "@/components/OwnedToggle";
 import {
   formatPrice,
   pogImageSrc,
+  pogSkinUrl,
   RARITY_LABELS,
   RARITY_STYLES,
   RARITY_RING,
@@ -21,19 +22,38 @@ export function PogCard({ pog }: { pog: PogWithOwnership }) {
         href={`/pogs/${pog._id}`}
         className="pog-flip relative block aspect-square overflow-hidden bg-secondary"
       >
-        <div
-          className={cn(
-            "pog-flip-inner absolute inset-2 overflow-hidden rounded-full ring-4 ring-offset-2 ring-offset-card",
-            RARITY_RING[pog.rarity]
-          )}
-        >
-          <Image
-            src={pogImageSrc(pog)}
-            alt={pog.name}
-            fill
-            sizes="(max-width: 768px) 50vw, 200px"
-            className="object-cover"
-          />
+        <div className="pog-flip-inner absolute inset-2">
+          <div
+            className={cn(
+              "pog-face overflow-hidden rounded-full ring-4 ring-offset-2 ring-offset-card",
+              RARITY_RING[pog.rarity]
+            )}
+          >
+            <Image
+              src={pogImageSrc(pog)}
+              alt={pog.name}
+              fill
+              sizes="(max-width: 768px) 50vw, 200px"
+              className="object-cover"
+            />
+          </div>
+          <div
+            className={cn(
+              "pog-face pog-face-back overflow-hidden rounded-full ring-4 ring-offset-2 ring-offset-card",
+              RARITY_RING[pog.rarity]
+            )}
+          >
+            <Image
+              src={
+                pog.imageBackUrl?.trim() ||
+                pogSkinUrl(`${pog.name}-${pog.number}`, pog.rarity, "back")
+              }
+              alt={`${pog.name} — zadná strana`}
+              fill
+              sizes="(max-width: 768px) 50vw, 200px"
+              className="object-cover"
+            />
+          </div>
         </div>
         <span
           className={cn(

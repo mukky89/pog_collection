@@ -105,7 +105,7 @@
   box-shadow: 7px 7px 0 0 hsl(var(--foreground) / 0.16);
 }
 
-/* Grid karta — coin-flip pri hoveri */
+/* Grid karta — pri hoveri sa preklopí a ukáže zadnú stranu */
 .pog-flip {
   perspective: 700px;
 }
@@ -114,7 +114,7 @@
   transform-style: preserve-3d;
 }
 .group:hover .pog-flip-inner {
-  transform: rotateY(360deg);
+  transform: rotateY(180deg);
 }
 
 /* Detail — skutočná obojstranná karta (predná + zadná strana) */
