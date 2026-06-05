@@ -2,8 +2,13 @@
  * Seed skript — naplní databázu ukážkovými kolekciami a POG predmetmi.
  * Spustenie:  npm run seed
  */
-import "dotenv/config";
+import { config } from "dotenv";
 import mongoose from "mongoose";
+
+// Načítaj premenné z .env.local (a .env ako fallback)
+config({ path: ".env.local" });
+config();
+
 import CollectionModel from "../lib/models/Collection";
 import PogModel from "../lib/models/Pog";
 import UserCollectionModel from "../lib/models/UserCollection";
