@@ -41,7 +41,9 @@ export function DbErrorState({ message }: { message: string }) {
         </h2>
         <p className="text-sm text-muted-foreground">{message}</p>
         <p className="text-xs text-muted-foreground">
-          Skontroluj premennú <code>MONGODB_URI</code> v <code>.env.local</code>.
+          Nastav premennú <code>MONGODB_URI</code> — lokálne v{" "}
+          <code>.env.local</code>, na Railway v{" "}
+          <strong>Settings → Variables</strong>.
         </p>
       </CardContent>
     </Card>
