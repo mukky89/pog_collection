@@ -3,6 +3,9 @@
  * vybraných setov do `public/pogs/<slug>/` a vygeneruje manifest
  * `scripts/milkcapmania-data.json`, ktorý potom použije `npm run seed`.
  *
+ * Sťahujeme 300 DPI verzie (ostré, ~425×425 px). Názvy súborov sú rovnaké
+ * ako pri 75 DPI, takže re-scrape len nahradí obrázky bez zmeny ciest v DB.
+ *
  * Spustenie:  npm run scrape
  *
  * Zdroj obrázkov: https://www.milkcapmania.co.uk (fanúšikovský katalóg).
@@ -11,6 +14,11 @@
  */
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import sharp from "sharp";
+
+// Cieľová veľkosť obrázka — 300DPI originály (~425–500 px) zmenšíme a
+// skomprimujeme, aby bola karta ostrá, ale repo nenarástlo do stoviek MB.
+const MAX_PX = 320;
 
 const BASE = "https://www.milkcapmania.co.uk";
 const UA =
@@ -108,6 +116,7 @@ async function scrapeSet(cfg: SetConfig): Promise<CollectionEntry> {
   const imgs = extractImages(html);
 
   // Capy daného setu sú v jednom 75DPI priečinku — vyber ten s najviac obrázkami.
+  // (V <img> sú len 75DPI náhľady; 300DPI verziu stiahneme cez prepis cesty.)
   const byDir = new Map<string, { src: string; alt: string }[]>();
   for (const img of imgs) {
     if (!/\/75DPI\//i.test(img.src)) continue;
@@ -131,12 +140,19 @@ async function scrapeSet(cfg: SetConfig): Promise<CollectionEntry> {
   const pogs: PogEntry[] = [];
   for (const img of unique) {
     const file = safeFileName(img.src);
-    const res = await fetch(img.src, { headers: { "User-Agent": UA } });
+    // Uprednostni ostrú 300DPI verziu; ak chýba, použij 75DPI náhľad.
+    const hiRes = img.src.replace(/\/75DPI\//i, "/300DPI/");
+    let res = await fetch(hiRes, { headers: { "User-Agent": UA } });
+    if (!res.ok) res = await fetch(img.src, { headers: { "User-Agent": UA } });
     if (!res.ok) {
       console.warn(`  ⚠ vynechané (${res.status}): ${img.src}`);
       continue;
     }
-    const buf = Buffer.from(await res.arrayBuffer());
+    const raw = Buffer.from(await res.arrayBuffer());
+    const buf = await sharp(raw)
+      .resize(MAX_PX, MAX_PX, { fit: "inside", withoutEnlargement: true })
+      .png({ quality: 80, compressionLevel: 9, palette: true })
+      .toBuffer();
     await writeFile(join(outDir, file), buf);
 
     const { number, name } = parseFromFile(file);
