@@ -105,7 +105,7 @@
   box-shadow: 7px 7px 0 0 hsl(var(--foreground) / 0.16);
 }
 
-/* 3D coin-flip pri hoveri */
+/* Grid karta — coin-flip pri hoveri */
 .pog-flip {
   perspective: 700px;
 }
@@ -115,6 +115,30 @@
 }
 .group:hover .pog-flip-inner {
   transform: rotateY(360deg);
+}
+
+/* Detail — skutočná obojstranná karta (predná + zadná strana) */
+.pog-coin {
+  perspective: 1200px;
+}
+.pog-coin-inner {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.pog-coin-inner.is-flipped {
+  transform: rotateY(180deg);
+}
+.pog-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.pog-face-back {
+  transform: rotateY(180deg);
 }
 
 @keyframes shine-slide {
