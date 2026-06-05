@@ -14,5 +14,5 @@ export const BUILD_SHA = (
   "dev"
 ).slice(0, 7);
 
-/** Zobraziteľný štítok verzie, napr. "v1.1.0 · a1b2c3d". */
+/** Zobraziteľný štítok verzie, napr. "v1.2.0 · a1b2c3d". */
 export const VERSION_LABEL = `v${APP_VERSION} · ${BUILD_SHA}`;
