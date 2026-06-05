@@ -17,9 +17,10 @@ export default function RootLayout({
       <body>
         <Navbar />
         <main className="container py-8">{children}</main>
-        <footer className="border-t py-6">
-          <div className="container text-center text-sm text-muted-foreground">
-            POG Collector — evidencia zbierky POG the Game
+        <footer className="mt-8 border-t-2 border-foreground/10 py-6">
+          <div className="container text-center text-sm font-medium text-muted-foreground">
+            🔴 <span className="pog-gradient-text font-extrabold">POG Collector</span>{" "}
+            — slammuj, zbieraj, vyhrávaj!
           </div>
         </footer>
       </body>

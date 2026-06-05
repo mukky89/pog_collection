@@ -20,8 +20,10 @@ export default async function CollectionsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Kolekcie</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-3xl font-extrabold sm:text-4xl">
+          📚 <span className="pog-gradient-text">Kolekcie</span>
+        </h1>
+        <p className="font-medium text-muted-foreground">
           Všetky série POG a ich kompletnosť
         </p>
       </div>

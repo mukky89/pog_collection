@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { LayoutDashboard, Layers, CircleDot, Settings } from "lucide-react";
@@ -16,13 +17,20 @@ export function Navbar() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-30 border-b bg-background/80 backdrop-blur">
+    <header className="sticky top-0 z-30 border-b-2 border-foreground/10 bg-background/80 backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 font-bold">
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-            P
+        <Link href="/" className="group flex items-center gap-2.5 font-extrabold">
+          <Image
+            src="/logo.svg"
+            alt="POG Collector"
+            width={40}
+            height={40}
+            className="transition-transform duration-500 group-hover:rotate-[360deg]"
+            priority
+          />
+          <span className="text-xl">
+            <span className="pog-gradient-text">POG</span> Collector
           </span>
-          <span className="text-lg">POG Collector</span>
         </Link>
         <nav className="flex items-center gap-1">
           {links.map(({ href, label, icon: Icon }) => {
@@ -33,10 +41,10 @@ export function Navbar() {
                 key={href}
                 href={href}
                 className={cn(
-                  "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent",
+                  "flex items-center gap-2 rounded-full px-3.5 py-2 text-sm font-bold transition-all",
                   active
-                    ? "bg-accent text-foreground"
-                    : "text-muted-foreground"
+                    ? "bg-primary text-primary-foreground pog-shadow"
+                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                 )}
               >
                 <Icon className="h-4 w-4" />

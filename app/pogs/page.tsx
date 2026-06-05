@@ -39,8 +39,10 @@ export default async function PogsPage({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Všetky POG</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-3xl font-extrabold sm:text-4xl">
+          🔴 <span className="pog-gradient-text">Všetky POG</span>
+        </h1>
+        <p className="font-medium text-muted-foreground">
           Vyhľadávanie, filtrovanie a triedenie celého katalógu
         </p>
       </div>

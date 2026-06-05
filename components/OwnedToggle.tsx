@@ -52,16 +52,20 @@ export function OwnedToggle({
       variant={owned ? "default" : "outline"}
       onClick={toggle}
       disabled={pending}
-      className={cn(owned && "bg-emerald-600 hover:bg-emerald-700", className)}
+      className={cn(
+        owned &&
+          "bg-emerald-500 shadow-[0_4px_0_0_#0a7a52] hover:bg-emerald-500 hover:brightness-105 active:shadow-[0_1px_0_0_#0a7a52]",
+        className
+      )}
     >
       {pending ? (
         <Loader2 className="h-4 w-4 animate-spin" />
       ) : owned ? (
-        <Check className="h-4 w-4" />
+        <Check className="h-4 w-4 animate-bounce-in" />
       ) : (
         <Plus className="h-4 w-4" />
       )}
-      {owned ? "Vlastním" : "Chýba mi"}
+      {owned ? "Mám ho!" : "Chýba mi"}
     </Button>
   );
 }

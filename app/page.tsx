@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { StatsPanel } from "@/components/StatsPanel";
 import { CollectionCard } from "@/components/CollectionCard";
 import { Card, CardContent } from "@/components/ui/card";
@@ -48,34 +49,52 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <Link
-          href="/pogs?owned=missing"
-          className={cn(buttonVariants({ variant: "outline" }))}
-        >
-          Chýbajúce predmety
-          <ArrowRight className="h-4 w-4" />
-        </Link>
+      <div className="pog-burst relative overflow-hidden rounded-3xl border-2 border-foreground/10 p-6 sm:p-8">
+        <div className="relative z-10 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+          <div className="flex items-center gap-4">
+            <Image
+              src="/logo.svg"
+              alt=""
+              width={64}
+              height={64}
+              className="animate-spin-slow drop-shadow"
+            />
+            <div>
+              <h1 className="text-3xl font-extrabold sm:text-4xl">
+                <span className="pog-gradient-text">POG</span> Dashboard
+              </h1>
+              <p className="font-medium text-muted-foreground">
+                Tvoja zbierka na jednom mieste — slammuj ďalej! 🎯
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/pogs?owned=missing"
+            className={cn(buttonVariants({ variant: "default" }))}
+          >
+            Čo mi chýba
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
       </div>
 
       <StatsPanel stats={stats} />
 
       <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Najvzácnejšie kusy</h2>
-        </div>
+        <h2 className="text-2xl font-extrabold">👑 Najvzácnejšie kusy</h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {stats.rarest.map((pog) => (
             <Link key={pog._id} href={`/pogs/${pog._id}`}>
-              <Card className="transition-shadow hover:shadow-md">
+              <Card className="group h-full animate-pop-in border-2 pog-shadow-hover">
                 <CardContent className="space-y-1 p-4">
-                  <Crown className="h-5 w-5 text-amber-500" />
-                  <p className="truncate font-medium">{pog.name}</p>
-                  <p className="text-lg font-bold">{formatPrice(pog.price)}</p>
+                  <Crown className="h-6 w-6 text-amber-500 transition-transform group-hover:scale-125 group-hover:rotate-12" />
+                  <p className="truncate font-bold">{pog.name}</p>
+                  <p className="text-lg font-extrabold text-primary">
+                    {formatPrice(pog.price)}
+                  </p>
                   <span
                     className={cn(
-                      "inline-block rounded-full border px-2 py-0.5 text-[11px] font-medium",
+                      "inline-block rounded-full border px-2 py-0.5 text-[11px] font-bold",
                       RARITY_STYLES[pog.rarity]
                     )}
                   >
@@ -90,12 +109,12 @@ export default async function DashboardPage() {
 
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Kolekcie</h2>
+          <h2 className="text-2xl font-extrabold">📚 Kolekcie</h2>
           <Link
             href="/collections"
-            className="text-sm text-primary hover:underline"
+            className="text-sm font-bold text-primary hover:underline"
           >
-            Zobraziť všetky
+            Zobraziť všetky →
           </Link>
         </div>
         {collections.length === 0 ? (

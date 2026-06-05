@@ -53,6 +53,7 @@ export default async function PogDetailPage({
           front={pog.imageUrl}
           back={pog.imageBackUrl}
           alt={pog.name}
+          rarity={pog.rarity}
         />
 
         <div className="space-y-5">

@@ -24,8 +24,10 @@ export default async function AdminPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Admin správa</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-3xl font-extrabold sm:text-4xl">
+          ⚙️ <span className="pog-gradient-text">Admin správa</span>
+        </h1>
+        <p className="font-medium text-muted-foreground">
           Pridávanie a editovanie kolekcií, POG predmetov a hromadný import
         </p>
       </div>
