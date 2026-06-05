@@ -59,7 +59,8 @@ export function ImportPanel() {
           </p>
           <p>
             Kolekcia sa automaticky vytvorí, ak ešte neexistuje. Cena sa zadáva
-            v eurách.
+            v eurách. Opakovaný import rovnakých POG-ov (kolekcia + názov +
+            číslo) ich <strong>aktualizuje</strong>, nevytvára duplikáty.
           </p>
         </div>
 
