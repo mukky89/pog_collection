@@ -5,19 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-const DICEBEAR = "https://api.dicebear.com/9.x";
 const PLACEHOLDER = "/placeholder-pog.svg";
 
-/** Farebné palety pozadia milkcap skinu podľa vzácnosti (DiceBear). */
-const SKIN_PALETTES: Record<string, string> = {
-  common: "cbd5e1,e2e8f0,94a3b8",
-  uncommon: "a7f3d0,6ee7b7,34d399",
-  rare: "93c5fd,60a5fa,3b82f6",
-  "ultra-rare": "f0abfc,e879f9,c084fc,a78bfa",
-};
-
 /**
- * Vygeneruje URL na originálny „milkcap" skin POG-u cez DiceBear (štýl rings).
+ * Vygeneruje URL na vlastný „milkcap" skin POG-u (vlastný endpoint /api/skin).
  * Seed zaručuje, že rovnaký POG má vždy rovnaký skin.
  */
 export function pogSkinUrl(
@@ -25,23 +16,17 @@ export function pogSkinUrl(
   rarity: string = "common",
   variant: string = ""
 ): string {
-  const bg = SKIN_PALETTES[rarity] ?? SKIN_PALETTES.common;
   const params = new URLSearchParams({
     seed: variant ? `${seed}#${variant}` : seed,
-    backgroundColor: bg,
-    backgroundType: rarity === "ultra-rare" ? "gradientLinear" : "solid",
-    radius: "50",
+    rarity,
   });
-  return `${DICEBEAR}/rings/svg?${params.toString()}`;
+  return `/api/skin?${params.toString()}`;
 }
 
-/** Skin pre obal kolekcie (farebné geometrické tvary). */
+/** Skin pre obal kolekcie (farebná variácia milkcap dizajnu). */
 export function collectionCoverUrl(seed: string): string {
-  const params = new URLSearchParams({
-    seed,
-    backgroundType: "gradientLinear",
-  });
-  return `${DICEBEAR}/shapes/svg?${params.toString()}`;
+  const params = new URLSearchParams({ seed, rarity: "cover" });
+  return `/api/skin?${params.toString()}`;
 }
 
 /** Vráti reálny obrázok POG-u, alebo vygenerovaný skin ak žiadny nie je. */
