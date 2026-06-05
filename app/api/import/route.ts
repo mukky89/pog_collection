@@ -86,20 +86,27 @@ export async function POST(req: NextRequest) {
 
         const rarity = (row.rarity?.trim() || "common") as string;
         const validRarities = ["common", "uncommon", "rare", "ultra-rare"];
+        const number = row.number ? Number(row.number) : 0;
 
-        await PogModel.create({
-          name,
-          collectionId: collection._id,
-          number: row.number ? Number(row.number) : 0,
-          rarity: validRarities.includes(rarity) ? rarity : "common",
-          price: row.price ? eurosToCents(row.price) : 0,
-          imageUrl: row.imageurl?.trim() || "/placeholder-pog.svg",
-          imageBackUrl: row.imagebackurl?.trim() || undefined,
-          description: row.description?.trim() || undefined,
-          tags: row.tags
-            ? row.tags.split(";").map((t) => t.trim()).filter(Boolean)
-            : [],
-        });
+        // Upsert: ak POG s rovnakou kolekciou + názvom + číslom už existuje,
+        // aktualizuj ho (vrátane novej zadnej strany) namiesto duplikovania.
+        await PogModel.findOneAndUpdate(
+          { collectionId: collection._id, name, number },
+          {
+            name,
+            collectionId: collection._id,
+            number,
+            rarity: validRarities.includes(rarity) ? rarity : "common",
+            price: row.price ? eurosToCents(row.price) : 0,
+            imageUrl: row.imageurl?.trim() || "/placeholder-pog.svg",
+            imageBackUrl: row.imagebackurl?.trim() || undefined,
+            description: row.description?.trim() || undefined,
+            tags: row.tags
+              ? row.tags.split(";").map((t) => t.trim()).filter(Boolean)
+              : [],
+          },
+          { upsert: true, new: true, setDefaultsOnInsert: true }
+        );
         imported += 1;
       } catch (rowErr: any) {
         errors.push(`Riadok ${i + 2}: ${rowErr.message}`);
