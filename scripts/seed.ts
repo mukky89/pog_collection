@@ -2,12 +2,18 @@
  * Seed skript — naplní databázu ukážkovými kolekciami a POG predmetmi.
  * Spustenie:  npm run seed
  */
-import { config } from "dotenv";
 import mongoose from "mongoose";
 
-// Načítaj premenné z .env.local (a .env ako fallback)
-config({ path: ".env.local" });
-config();
+// Lokálne načítaj .env.local cez dotenv (ak je nainštalovaný). Na Railway
+// sú premenné injektnuté priamo do prostredia, takže dotenv nie je potrebný.
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { config } = require("dotenv");
+  config({ path: ".env.local" });
+  config();
+} catch {
+  /* dotenv nie je dostupný (napr. produkcia) — použijeme process.env */
+}
 
 import CollectionModel from "../lib/models/Collection";
 import PogModel from "../lib/models/Pog";

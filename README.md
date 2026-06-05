@@ -99,7 +99,38 @@ Kolekcia sa automaticky vytvorí, ak ešte neexistuje.
 ## Deployment na Railway
 
 1. Pushni kód na GitHub.
-2. Na [railway.app](https://railway.app) → **New Project → Deploy from GitHub repo**.
-3. Pridaj MongoDB plugin alebo použi externý MongoDB Atlas.
-4. Nastav premenné prostredia (Settings → Variables).
-5. Railway automaticky spustí `npm run build` a `npm start`.
+2. Na [railway.app](https://railway.app) → **New Project → Deploy from GitHub repo**
+   (alebo pridaj službu do existujúceho projektu k MongoDB).
+3. Pridaj **MongoDB** službu (Railway plugin) alebo použi MongoDB Atlas.
+4. V **Settings → Variables** nastav `MONGODB_URI`.
+5. Railway podľa `railway.json` spustí `npm run build` a `npm start`
+   (port injektuje cez `PORT`).
+
+### Public vs. interná MONGODB_URI
+
+Railway dáva MongoDB dve adresy:
+
+```bash
+# INTERNÁ — použi v Railway Variables (rýchlejšia, bezpečná, bez egress portu)
+MONGODB_URI=mongodb://mongo:<heslo>@mongodb.railway.internal:27017
+
+# PUBLIC PROXY — len pre prístup zvonku (lokálny seed/test z tvojho PC)
+MONGODB_URI=mongodb://mongo:<heslo>@<subdoména>.proxy.rlwy.net:<port>
+```
+
+> V Railway nasadení vždy použi **internú** adresu — funguje vnútri privátnej
+> siete projektu. Public proxy port býva blokovaný egress firewallmi.
+
+### Naplnenie dát po nasadení
+
+Dve možnosti:
+
+1. **Admin UI (odporúčané)** — otvor `/admin → CSV Import`, klikni
+   *„Vložiť ukážkové dáta"* a *Importovať*. Bez shellu, funguje hneď.
+2. **Seed skript z Railway shellu:**
+
+   ```bash
+   npx tsx scripts/seed.ts
+   ```
+
+   (premenné z prostredia Railway sa použijú automaticky)
