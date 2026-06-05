@@ -32,14 +32,36 @@ npm install
 cp .env.example .env.local
 #   a doplň MONGODB_URI
 
-# 3. (voliteľné) Naplň databázu ukážkovými dátami
+# 3. (voliteľné) Stiahni reálne POG vizuály z milkcapmania.co.uk
+npm run scrape
+
+# 4. Naplň databázu (použije manifest zo `scrape`, inak ukážkové dáta)
 npm run seed
 
-# 4. Spusti dev server
+# 5. Spusti dev server
 npm run dev
 ```
 
 Aplikácia beží na [http://localhost:3000](http://localhost:3000).
+
+---
+
+## POG vizuály z milkcapmania.co.uk
+
+`npm run scrape` stiahne reálne obrázky milkcapov (75 DPI) vybraných setov
+z [milkcapmania.co.uk](https://www.milkcapmania.co.uk) do `public/pogs/<slug>/`
+a vygeneruje manifest `scripts/milkcapmania-data.json`. Ten potom použije
+`npm run seed` na naplnenie databázy reálnymi kolekciami a názvami.
+
+- Zoznam sťahovaných setov (a ich roky/výrobcov) uprav v poli `SETS`
+  v `scripts/scrape-milkcapmania.ts`.
+- Scraper rešpektuje `Crawl-delay: 3` z `robots.txt`.
+- POG bez stiahnutého obrázka automaticky dostane generovaný „milkcap" skin
+  (`lib/skin.ts`) ako fallback.
+
+> Obrázky pochádzajú z fanúšikovského katalógu milkcapmania.co.uk a slúžia
+> na osobné/zberateľské účely. Zdroj je uvedený v manifeste aj v popise
+> každej kolekcie.
 
 ---
 

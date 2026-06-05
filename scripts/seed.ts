@@ -1,8 +1,13 @@
 /**
- * Seed skript — naplní databázu ukážkovými kolekciami a POG predmetmi.
- * Spustenie:  npm run seed
+ * Seed skript — naplní databázu reálnymi POG / milkcap kolekciami
+ * stiahnutými z milkcapmania.co.uk (manifest `milkcapmania-data.json`).
+ *
+ * Ak manifest chýba, najprv spusti:  npm run scrape
+ * Spustenie seedu:                   npm run seed
  */
 import mongoose from "mongoose";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 // Lokálne načítaj .env.local cez dotenv (ak je nainštalovaný). Na Railway
 // sú premenné injektnuté priamo do prostredia, takže dotenv nie je potrebný.
@@ -20,35 +25,58 @@ import PogModel from "../lib/models/Pog";
 import UserCollectionModel from "../lib/models/UserCollection";
 import { slugify } from "../lib/utils";
 
-const RARITIES = ["common", "uncommon", "rare", "ultra-rare"] as const;
+type ManifestPog = { number: number; name: string; image: string };
+type ManifestCollection = {
+  slug: string;
+  name: string;
+  year: number;
+  manufacturer: string;
+  source: string;
+  pogs: ManifestPog[];
+};
+type Manifest = {
+  source: string;
+  scrapedAt: string;
+  collections: ManifestCollection[];
+};
 
-const COLLECTIONS = [
-  {
-    name: "World POG Federation",
-    description: "Originálna séria POG the Game od World POG Federation.",
-    year: 1994,
-    manufacturer: "World POG Federation",
-    count: 12,
-  },
-  {
-    name: "Mighty Morphin Power Rangers",
-    description: "Limitovaná séria s motívmi Power Rangers.",
-    year: 1995,
-    manufacturer: "Saban",
-    count: 8,
-  },
-  {
-    name: "Slammer Whammers",
-    description: "Kovové slammery a špeciálne edície.",
-    year: 1993,
-    manufacturer: "Spectra Star",
-    count: 10,
-  },
-];
+function loadManifest(): Manifest {
+  const file = join(process.cwd(), "scripts", "milkcapmania-data.json");
+  try {
+    return JSON.parse(readFileSync(file, "utf-8"));
+  } catch {
+    throw new Error(
+      `Chýba manifest ${file}. Najprv spusti: npm run scrape`
+    );
+  }
+}
+
+/** Deterministická vzácnosť podľa poradového čísla — dáva kolekcii pestrosť. */
+function rarityFor(n: number): "common" | "uncommon" | "rare" | "ultra-rare" {
+  if (n > 0 && n % 13 === 0) return "ultra-rare";
+  if (n > 0 && n % 7 === 0) return "rare";
+  if (n % 3 === 0) return "uncommon";
+  return "common";
+}
+
+function priceFor(rarity: string): number {
+  const base =
+    rarity === "ultra-rare"
+      ? 2000
+      : rarity === "rare"
+        ? 800
+        : rarity === "uncommon"
+          ? 300
+          : 50;
+  return base + Math.floor(Math.random() * base); // v centoch
+}
 
 async function run() {
   const uri = process.env.MONGODB_URI;
   if (!uri) throw new Error("Chýba MONGODB_URI");
+
+  const manifest = loadManifest();
+
   await mongoose.connect(uri);
   console.log("Pripojené k databáze.");
 
@@ -59,38 +87,39 @@ async function run() {
   ]);
   console.log("Databáza vyčistená.");
 
-  for (const c of COLLECTIONS) {
+  for (const c of manifest.collections) {
+    // Vynechaj katalógové "Back" dizajny (zadné strany capov).
+    const fronts = c.pogs.filter((p) => !/^back\b/i.test(p.name.trim()));
+    if (!fronts.length) continue;
+
     const collection = await CollectionModel.create({
       name: c.name,
-      slug: slugify(c.name),
-      description: c.description,
+      slug: slugify(c.name) || c.slug,
+      description: `${c.name} — vizuály z katalógu milkcapmania.co.uk.`,
       year: c.year,
       manufacturer: c.manufacturer,
-      totalItems: c.count,
+      coverImage: fronts[0].image,
+      totalItems: fronts.length,
     });
 
-    const pogs = [];
-    for (let i = 1; i <= c.count; i++) {
-      const rarity = RARITIES[Math.floor(Math.random() * RARITIES.length)];
-      const basePrice =
-        rarity === "ultra-rare"
-          ? 2000
-          : rarity === "rare"
-            ? 800
-            : rarity === "uncommon"
-              ? 300
-              : 50;
-      pogs.push({
-        name: `${c.name} #${i}`,
+    const docs = fronts.map((p, idx) => {
+      const number = p.number > 0 ? p.number : idx + 1;
+      const rarity = rarityFor(number);
+      return {
+        name: p.name,
         collectionId: collection._id,
-        number: i,
+        number,
         rarity,
-        price: basePrice + Math.floor(Math.random() * basePrice),
-        description: `POG číslo ${i} zo série ${c.name}.`,
-        tags: [c.manufacturer.toLowerCase().replace(/\s+/g, "-")],
-      });
-    }
-    const created = await PogModel.insertMany(pogs);
+        price: priceFor(rarity),
+        imageUrl: p.image,
+        description: `${p.name} zo série ${c.name}.`,
+        tags: [c.manufacturer.toLowerCase().replace(/\s+/g, "-")].filter(
+          Boolean
+        ),
+      };
+    });
+
+    const created = await PogModel.insertMany(docs);
     console.log(`Vytvorená kolekcia "${c.name}" s ${created.length} POG-mi.`);
 
     // Označ náhodnú časť ako vlastnené
