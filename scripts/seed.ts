@@ -59,6 +59,33 @@ function rarityFor(n: number): "common" | "uncommon" | "rare" | "ultra-rare" {
   return "common";
 }
 
+/**
+ * Vyberie zadnú stranu capu z dostupných „Back" dizajnov setu.
+ * - Pokémon: zadky s hviezdičkami zodpovedajú vzácnosti (1★…4★)
+ * - sety s jediným `Back.png`: spoločný zadok pre všetky
+ * - sety s viacerými gradientmi (napr. Frogs): deterministický výber podľa čísla
+ */
+function backFor(
+  backs: ManifestPog[],
+  rarity: string,
+  number: number
+): string | undefined {
+  if (!backs.length) return undefined;
+  const stars: Record<string, number> = {
+    common: 1,
+    uncommon: 2,
+    rare: 3,
+    "ultra-rare": 4,
+  };
+  const star = backs.find((b) =>
+    new RegExp(`Back-${stars[rarity]}-star`, "i").test(b.image)
+  );
+  if (star) return star.image;
+  const single = backs.find((b) => /\/Back\.png$/i.test(b.image));
+  if (single) return single.image;
+  return backs[number % backs.length].image;
+}
+
 function priceFor(rarity: string): number {
   const base =
     rarity === "ultra-rare"
@@ -88,8 +115,10 @@ async function run() {
   console.log("Databáza vyčistená.");
 
   for (const c of manifest.collections) {
-    // Vynechaj katalógové "Back" dizajny (zadné strany capov).
-    const fronts = c.pogs.filter((p) => !/^back\b/i.test(p.name.trim()));
+    // Rozdeľ na predné strany capov a katalógové "Back" dizajny.
+    const isBack = (p: ManifestPog) => /^back\b/i.test(p.name.trim());
+    const fronts = c.pogs.filter((p) => !isBack(p));
+    const backs = c.pogs.filter(isBack);
     if (!fronts.length) continue;
 
     const collection = await CollectionModel.create({
@@ -112,6 +141,7 @@ async function run() {
         rarity,
         price: priceFor(rarity),
         imageUrl: p.image,
+        imageBackUrl: backFor(backs, rarity, number),
         description: `${p.name} zo série ${c.name}.`,
         tags: [c.manufacturer.toLowerCase().replace(/\s+/g, "-")].filter(
           Boolean
