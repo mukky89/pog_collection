@@ -10,12 +10,16 @@
  *   • capy       #9–#78  (70 ks)
  *   • spolu      78 ks
  *
- * Vlastnené kusy sú prečítané z fotky zbierky (`OWNED_CAPS`). Slammery #1–#8
- * na fotke nie sú, takže ostávajú ako chýbajúce.
+ * Reálne obrázky a názvy capov sa berú z manifestu `milkcapmania-data.json`
+ * (vytvorený cez `npm run scrape`). Slammery #1–#8 na stránke nie sú, takže
+ * dostanú placeholder. Vlastnené kusy sú prečítané z fotky zbierky
+ * (`OWNED_CAPS`); slammery na fotke nie sú, takže ostávajú ako chýbajúce.
  *
- * Spustenie:  npm run seed:toy-story
+ * Spustenie:  npm run seed:toy-story  (najprv `npm run scrape`)
  */
 import mongoose from "mongoose";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 try {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -30,6 +34,7 @@ import CollectionModel from "../lib/models/Collection";
 import PogModel from "../lib/models/Pog";
 import UserCollectionModel from "../lib/models/UserCollection";
 
+const SLUG = "toy-story-panini-caps";
 const PLACEHOLDER = "/placeholder-pog.svg";
 
 /** Capy, ktoré reálne vlastním (prečítané z fotky zbierky). */
@@ -38,6 +43,30 @@ const OWNED_CAPS = new Set<number>([
   43, 44, 50, 51, 54, 55, 56, 58, 59, 60, 62, 63, 66, 68, 69, 70, 72, 73, 74,
   75, 76, 77, 78,
 ]);
+
+type Visual = { name: string; image: string };
+
+/** Z manifestu zostav mapu číslo capu -> { názov, obrázok }. */
+function loadVisuals(): Map<number, Visual> {
+  const map = new Map<number, Visual>();
+  try {
+    const file = join(process.cwd(), "scripts", "milkcapmania-data.json");
+    const manifest = JSON.parse(readFileSync(file, "utf-8"));
+    const coll = manifest.collections?.find((c: any) => c.slug === SLUG);
+    for (const p of coll?.pogs ?? []) {
+      // Preskoč katalógový „Back" (číslo 0) a neprepisuj už uloženú variantu.
+      if (p.number > 0 && !map.has(p.number)) {
+        map.set(p.number, { name: p.name, image: p.image });
+      }
+    }
+  } catch {
+    console.warn(
+      "⚠ Manifest milkcapmania-data.json sa nenašiel — použijem placeholder. " +
+        "Spusti najprv: npm run scrape"
+    );
+  }
+  return map;
+}
 
 /** Vytvorí/aktualizuje kolekciu a vráti jej dokument. */
 async function upsertCollection(data: {
@@ -62,6 +91,7 @@ async function upsertPog(args: {
   name: string;
   number: number;
   rarity: "common" | "uncommon" | "rare" | "ultra-rare";
+  imageUrl: string;
   owned: boolean;
 }) {
   const pog = await PogModel.findOneAndUpdate(
@@ -72,7 +102,7 @@ async function upsertPog(args: {
         collectionId: args.collectionId,
         number: args.number,
         rarity: args.rarity,
-        imageUrl: PLACEHOLDER,
+        imageUrl: args.imageUrl,
       },
     },
     { upsert: true, new: true, setDefaultsOnInsert: true }
@@ -92,26 +122,34 @@ async function run() {
   const uri = process.env.MONGODB_URI;
   if (!uri) throw new Error("Chýba MONGODB_URI");
 
+  const visuals = loadVisuals();
+
   await mongoose.connect(uri);
   console.log("Pripojené k databáze.");
 
-  // --- Toy Story Panini Caps (slammery 1–8 + capy 9–78) ---
+  // Obal kolekcie = prvý reálny obrázok capu (fallback placeholder).
+  const cover = visuals.get(9)?.image ?? visuals.values().next().value?.image;
+
   const toyStory = await upsertCollection({
     name: "Toy Story Panini Caps",
-    slug: "toy-story-panini-caps",
+    slug: SLUG,
     description:
       "Disney/Pixar Toy Story — Panini Caps (1996). Slammery #1–#8 a capy #9–#78.",
     year: 1996,
     manufacturer: "Panini",
     totalItems: 78,
+    coverImage: cover,
   });
 
   let owned = 0;
+  let withImage = 0;
   for (let n = 1; n <= 78; n++) {
     const isSlammer = n <= 8;
-    const name = isSlammer
-      ? `Toy Story Slammer #${n}`
-      : `Toy Story Cap #${n}`;
+    const visual = visuals.get(n);
+    if (visual) withImage++;
+    const name =
+      visual?.name ||
+      (isSlammer ? `Toy Story Slammer #${n}` : `Toy Story Cap #${n}`);
     // Slammery nie sú na fotke → chýbajú. Capy podľa OWNED_CAPS.
     const isOwned = !isSlammer && OWNED_CAPS.has(n);
     if (isOwned) owned++;
@@ -120,11 +158,13 @@ async function run() {
       name,
       number: n,
       rarity: isSlammer ? "rare" : "common",
+      imageUrl: visual?.image ?? PLACEHOLDER,
       owned: isOwned,
     });
   }
   console.log(
-    `Toy Story Panini Caps: 78 capov (vlastnených ${owned}, chýba ${78 - owned}).`
+    `Toy Story Panini Caps: 78 capov (s obrázkom ${withImage}, ` +
+      `vlastnených ${owned}, chýba ${78 - owned}).`
   );
 
   console.log("Hotovo! ✅");

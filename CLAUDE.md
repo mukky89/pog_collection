@@ -14,6 +14,18 @@ Pri **každej dokončenej úlohe** v tomto repozitári vždy:
 Verzia sa zobrazuje v pätičke cez `lib/version.ts` (`VERSION_LABEL`), takže
 po nasadení (Railway buildne z `main`) je nová verzia hneď viditeľná.
 
+## Obrázky pre pogy (DÔLEŽITÉ)
+
+Pri pridávaní **akejkoľvek novej kolekcie / pogov** vždy stiahni aj **reálne
+obrázky** (nie placeholder) tak ako doteraz:
+
+1. Pridaj set do `SETS` v `scripts/scrape-milkcapmania.ts` (zdroj
+   milkcapmania.co.uk) a spusti `npm run scrape` — obrázky pôjdu do
+   `public/pogs/<slug>/` a zapíšu sa do `scripts/milkcapmania-data.json`.
+2. Seed skript danej kolekcie nech mapuje obrázky podľa čísla capu z manifestu
+   (`imageUrl` z `/pogs/<slug>/…`), a placeholder použije len ako fallback.
+3. Stiahnuté obrázky **commitni** do repozitára.
+
 ## Vetvy
 
 `feature` → `claude/vibrant-newton-CzFU9` (default) → `main` (produkcia, Railway).

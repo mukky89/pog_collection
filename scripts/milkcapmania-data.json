@@ -1,7 +1,402 @@
 {
   "source": "https://www.milkcapmania.co.uk",
-  "scrapedAt": "2026-06-05",
+  "scrapedAt": "2026-06-06",
   "collections": [
+    {
+      "path": "/Panini-Caps/493-Toy-Story.html",
+      "slug": "toy-story-panini-caps",
+      "name": "Toy Story Panini Caps",
+      "year": 1996,
+      "manufacturer": "Panini",
+      "source": "https://www.milkcapmania.co.uk/Panini-Caps/493-Toy-Story.html",
+      "pogs": [
+        {
+          "number": 0,
+          "name": "Back",
+          "image": "/pogs/toy-story-panini-caps/Back.png"
+        },
+        {
+          "number": 9,
+          "name": "Toy Story Logo",
+          "image": "/pogs/toy-story-panini-caps/09-Toy-Story-Logo.png"
+        },
+        {
+          "number": 10,
+          "name": "Code Red Recon",
+          "image": "/pogs/toy-story-panini-caps/10-Code-Red-Recon.png"
+        },
+        {
+          "number": 11,
+          "name": "Green Army Man",
+          "image": "/pogs/toy-story-panini-caps/11-Green-Army-Man.png"
+        },
+        {
+          "number": 12,
+          "name": "Buzz Light Year seat belt",
+          "image": "/pogs/toy-story-panini-caps/12-Buzz-Light-Year-seat-belt.png"
+        },
+        {
+          "number": 13,
+          "name": "Planet Rocket logo",
+          "image": "/pogs/toy-story-panini-caps/13-Planet-Rocket-logo.png"
+        },
+        {
+          "number": 14,
+          "name": "Buzz and Woody firework",
+          "image": "/pogs/toy-story-panini-caps/14-Buzz-and-Woody-firework.png"
+        },
+        {
+          "number": 15,
+          "name": "Woody",
+          "image": "/pogs/toy-story-panini-caps/15-Woody.png"
+        },
+        {
+          "number": 16,
+          "name": "Buzz Lightyear",
+          "image": "/pogs/toy-story-panini-caps/16-Buzz-Lightyear.png"
+        },
+        {
+          "number": 17,
+          "name": "Buzz Lightyear",
+          "image": "/pogs/toy-story-panini-caps/17-Buzz-Lightyear.png"
+        },
+        {
+          "number": 18,
+          "name": "Buzz Lightyear",
+          "image": "/pogs/toy-story-panini-caps/18-Buzz-Lightyear.png"
+        },
+        {
+          "number": 19,
+          "name": "Buzz Lightyear To The Rescue",
+          "image": "/pogs/toy-story-panini-caps/19-Buzz-Lightyear-To-The-Rescue.png"
+        },
+        {
+          "number": 20,
+          "name": "Planet",
+          "image": "/pogs/toy-story-panini-caps/20-Planet.png"
+        },
+        {
+          "number": 21,
+          "name": "Green Army Men Mortar",
+          "image": "/pogs/toy-story-panini-caps/21-Green-Army-Men-Mortar.png"
+        },
+        {
+          "number": 22,
+          "name": "Buzz Lightyear",
+          "image": "/pogs/toy-story-panini-caps/22-Buzz-Lightyear.png"
+        },
+        {
+          "number": 23,
+          "name": "Hamm",
+          "image": "/pogs/toy-story-panini-caps/23-Hamm.png"
+        },
+        {
+          "number": 23,
+          "name": "Piggy Bank",
+          "image": "/pogs/toy-story-panini-caps/23-Piggy-Bank.png"
+        },
+        {
+          "number": 24,
+          "name": "Buzz and Woody",
+          "image": "/pogs/toy-story-panini-caps/24-Buzz-and-Woody.png"
+        },
+        {
+          "number": 25,
+          "name": "Danger Jet Exhaust",
+          "image": "/pogs/toy-story-panini-caps/25-Danger-Jet-Exhaust.png"
+        },
+        {
+          "number": 26,
+          "name": "Rex",
+          "image": "/pogs/toy-story-panini-caps/26-Rex.png"
+        },
+        {
+          "number": 27,
+          "name": "Buzz Lightyear",
+          "image": "/pogs/toy-story-panini-caps/27-Buzz-Lightyear.png"
+        },
+        {
+          "number": 28,
+          "name": "Sheriff",
+          "image": "/pogs/toy-story-panini-caps/28-Sheriff.png"
+        },
+        {
+          "number": 29,
+          "name": "Toy Story Logo",
+          "image": "/pogs/toy-story-panini-caps/29-Toy-Story-Logo.png"
+        },
+        {
+          "number": 30,
+          "name": "Star",
+          "image": "/pogs/toy-story-panini-caps/30-Star.png"
+        },
+        {
+          "number": 31,
+          "name": "Green Army Man",
+          "image": "/pogs/toy-story-panini-caps/31-Green-Army-Man.png"
+        },
+        {
+          "number": 32,
+          "name": "Buzz Lightyear",
+          "image": "/pogs/toy-story-panini-caps/32-Buzz-Lightyear.png"
+        },
+        {
+          "number": 33,
+          "name": "Space Ranger Logo",
+          "image": "/pogs/toy-story-panini-caps/33-Space-Ranger-Logo.png"
+        },
+        {
+          "number": 33,
+          "name": "SR logo",
+          "image": "/pogs/toy-story-panini-caps/33-SR-logo.png"
+        },
+        {
+          "number": 34,
+          "name": "Buzz and Woody flying",
+          "image": "/pogs/toy-story-panini-caps/34-Buzz-and-Woody-flying.png"
+        },
+        {
+          "number": 35,
+          "name": "Buzz Lightyear",
+          "image": "/pogs/toy-story-panini-caps/35-Buzz-Lightyear.png"
+        },
+        {
+          "number": 35,
+          "name": "Buzz Lightyear 2",
+          "image": "/pogs/toy-story-panini-caps/35-Buzz-Lightyear-2-.png"
+        },
+        {
+          "number": 36,
+          "name": "We Are At Code Red",
+          "image": "/pogs/toy-story-panini-caps/36-We-Are-At-Code-Red-.png"
+        },
+        {
+          "number": 37,
+          "name": "Buzz Lightyear",
+          "image": "/pogs/toy-story-panini-caps/37-Buzz-Lightyear.png"
+        },
+        {
+          "number": 38,
+          "name": "Toy Story Logo",
+          "image": "/pogs/toy-story-panini-caps/38-Toy-Story-Logo.png"
+        },
+        {
+          "number": 39,
+          "name": "Woody",
+          "image": "/pogs/toy-story-panini-caps/39-Woody.png"
+        },
+        {
+          "number": 40,
+          "name": "Rocket",
+          "image": "/pogs/toy-story-panini-caps/40-Rocket.png"
+        },
+        {
+          "number": 41,
+          "name": "Green Army Man",
+          "image": "/pogs/toy-story-panini-caps/41-Green-Army-Man.png"
+        },
+        {
+          "number": 42,
+          "name": "Woody and Buzz",
+          "image": "/pogs/toy-story-panini-caps/42-Woody-and-Buzz.png"
+        },
+        {
+          "number": 43,
+          "name": "Gamma Sector 4",
+          "image": "/pogs/toy-story-panini-caps/43-Gamma-Sector-4.png"
+        },
+        {
+          "number": 43,
+          "name": "Gamma Sector 4 2",
+          "image": "/pogs/toy-story-panini-caps/43-Gamma-Sector-4-2-.png"
+        },
+        {
+          "number": 44,
+          "name": "Green Army Man Salute",
+          "image": "/pogs/toy-story-panini-caps/44-Green-Army-Man-Salute.png"
+        },
+        {
+          "number": 45,
+          "name": "Alien",
+          "image": "/pogs/toy-story-panini-caps/45-Alien.png"
+        },
+        {
+          "number": 45,
+          "name": "Alien 2",
+          "image": "/pogs/toy-story-panini-caps/45-Alien-2-.png"
+        },
+        {
+          "number": 46,
+          "name": "Woody",
+          "image": "/pogs/toy-story-panini-caps/46-Woody.png"
+        },
+        {
+          "number": 47,
+          "name": "Woody",
+          "image": "/pogs/toy-story-panini-caps/47-Woody.png"
+        },
+        {
+          "number": 48,
+          "name": "Bo Peep",
+          "image": "/pogs/toy-story-panini-caps/48-Bo-Peep.png"
+        },
+        {
+          "number": 49,
+          "name": "Woody",
+          "image": "/pogs/toy-story-panini-caps/49-Woody.png"
+        },
+        {
+          "number": 50,
+          "name": "Green Army Men Logo",
+          "image": "/pogs/toy-story-panini-caps/50-Green-Army-Men-Logo.png"
+        },
+        {
+          "number": 51,
+          "name": "Green Army Man Pistol",
+          "image": "/pogs/toy-story-panini-caps/51-Green-Army-Man-Pistol.png"
+        },
+        {
+          "number": 52,
+          "name": "Alien",
+          "image": "/pogs/toy-story-panini-caps/52-Alien.png"
+        },
+        {
+          "number": 53,
+          "name": "Rocket and Planet logo",
+          "image": "/pogs/toy-story-panini-caps/53-Rocket-and-Planet-logo.png"
+        },
+        {
+          "number": 54,
+          "name": "Buzz and Pushpins",
+          "image": "/pogs/toy-story-panini-caps/54-Buzz-and-Pushpins.png"
+        },
+        {
+          "number": 55,
+          "name": "Laser",
+          "image": "/pogs/toy-story-panini-caps/55-Laser.png"
+        },
+        {
+          "number": 56,
+          "name": "Intergalactic Space Communicator",
+          "image": "/pogs/toy-story-panini-caps/56-Intergalactic-Space-Communicator.png"
+        },
+        {
+          "number": 57,
+          "name": "Woody",
+          "image": "/pogs/toy-story-panini-caps/57-Woody.png"
+        },
+        {
+          "number": 58,
+          "name": "RC",
+          "image": "/pogs/toy-story-panini-caps/58-RC.png"
+        },
+        {
+          "number": 59,
+          "name": "Green Army Men",
+          "image": "/pogs/toy-story-panini-caps/59-Green-Army-Men.png"
+        },
+        {
+          "number": 60,
+          "name": "Buzz Lightyear To Infinity and Beyond",
+          "image": "/pogs/toy-story-panini-caps/60-Buzz-Lightyear-To-Infinity-and-Beyond.png"
+        },
+        {
+          "number": 61,
+          "name": "Green Army Men Mortar",
+          "image": "/pogs/toy-story-panini-caps/61-Green-Army-Men-Mortar.png"
+        },
+        {
+          "number": 62,
+          "name": "Hamm",
+          "image": "/pogs/toy-story-panini-caps/62-Hamm.png"
+        },
+        {
+          "number": 63,
+          "name": "Binoculars",
+          "image": "/pogs/toy-story-panini-caps/63-Binoculars.png"
+        },
+        {
+          "number": 64,
+          "name": "Buzz Lightyear",
+          "image": "/pogs/toy-story-panini-caps/64-Buzz-Lightyear.png"
+        },
+        {
+          "number": 65,
+          "name": "Buzz and Woody",
+          "image": "/pogs/toy-story-panini-caps/65-Buzz-and-Woody.png"
+        },
+        {
+          "number": 66,
+          "name": "To Infinity and Beyond",
+          "image": "/pogs/toy-story-panini-caps/66-To-Infinity-and-Beyond.png"
+        },
+        {
+          "number": 67,
+          "name": "To Infinity and Beyond",
+          "image": "/pogs/toy-story-panini-caps/67-To-Infinity-and-Beyond.png"
+        },
+        {
+          "number": 68,
+          "name": "Woody",
+          "image": "/pogs/toy-story-panini-caps/68-Woody.png"
+        },
+        {
+          "number": 69,
+          "name": "Buzz Lightyear",
+          "image": "/pogs/toy-story-panini-caps/69-Buzz-Lightyear.png"
+        },
+        {
+          "number": 70,
+          "name": "Woody",
+          "image": "/pogs/toy-story-panini-caps/70-Woody.png"
+        },
+        {
+          "number": 71,
+          "name": "Rex",
+          "image": "/pogs/toy-story-panini-caps/71-Rex.png"
+        },
+        {
+          "number": 72,
+          "name": "Woody",
+          "image": "/pogs/toy-story-panini-caps/72-Woody.png"
+        },
+        {
+          "number": 73,
+          "name": "Buzz Lightyear",
+          "image": "/pogs/toy-story-panini-caps/73-Buzz-Lightyear.png"
+        },
+        {
+          "number": 74,
+          "name": "Sheriff",
+          "image": "/pogs/toy-story-panini-caps/74-Sheriff.png"
+        },
+        {
+          "number": 75,
+          "name": "Toy Story Logo",
+          "image": "/pogs/toy-story-panini-caps/75-Toy-Story-Logo.png"
+        },
+        {
+          "number": 75,
+          "name": "Toy Story logo 2",
+          "image": "/pogs/toy-story-panini-caps/75-Toy-Story-logo-2-.png"
+        },
+        {
+          "number": 76,
+          "name": "Rex and Buzz",
+          "image": "/pogs/toy-story-panini-caps/76-Rex-and-Buzz.png"
+        },
+        {
+          "number": 77,
+          "name": "Bo Beep",
+          "image": "/pogs/toy-story-panini-caps/77-Bo-Beep.png"
+        },
+        {
+          "number": 78,
+          "name": "Rex",
+          "image": "/pogs/toy-story-panini-caps/78-Rex.png"
+        }
+      ]
+    },
     {
       "path": "/250-Brilliant-Frogs-Limited-Edition-Series-1.html",
       "slug": "brilliant-frogs-series-1",
