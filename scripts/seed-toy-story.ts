@@ -163,19 +163,25 @@ async function run() {
     // Slammery nie sú na fotke → chýbajú. Capy podľa OWNED_CAPS.
     const isOwned = !isSlammer && OWNED_CAPS.has(n);
     if (isOwned) owned++;
+    // Každý cap má vlastnú zadnú stranu s jeho číslom (vygenerovanú cez
+    // `npm run backs:toy-story`). Slammery #1–#8 zadok s číslom nemajú →
+    // fallback na spoločnú šablónu / placeholder.
+    const imageBackUrl = isSlammer
+      ? back ?? PLACEHOLDER
+      : `/pogs/${SLUG}/${n}-back.png`;
     await upsertPog({
       collectionId: toyStory._id,
       name,
       number: n,
       rarity: isSlammer ? "rare" : "common",
       imageUrl: visual?.image ?? PLACEHOLDER,
-      imageBackUrl: back, // spoločná zadná strana setu
+      imageBackUrl,
       owned: isOwned,
     });
   }
   console.log(
     `Toy Story Panini Caps: 78 capov (s obrázkom ${withImage}, ` +
-      `zadná strana ${back ? "✔" : "—"}, ` +
+      `vlastná zadná strana #9–#78, ` +
       `vlastnených ${owned}, chýba ${78 - owned}).`
   );
 
