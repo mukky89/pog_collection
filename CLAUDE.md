@@ -23,17 +23,28 @@ obrázky** (nie placeholder) tak ako doteraz — **vrátane zadných strán capo
    milkcapmania.co.uk) a spusti `npm run scrape` — obrázky (predné aj „Back"
    dizajny) pôjdu do `public/pogs/<slug>/` a zapíšu sa do
    `scripts/milkcapmania-data.json`.
-2. **Každý cap musí mať svoju vlastnú zadnú stranu** — nikdy nepoužívaj jednu
-   spoločnú pre celý set. Zadky stiahni zo stránky; ak zdroj poskytuje len
-   jednu šablónu zadku (napr. milkcapmania má naskenovaný jeden exemplár
-   s vytlačeným číslom), **vygeneruj z nej zadok pre každé číslo** (pôvodné
-   číslo prebij a vykresli správne) — vzor: `scripts/generate-toy-story-backs.ts`,
-   výstup `public/pogs/<slug>/<n>-back.png`.
+2. **Zadné strany VŽDY iba originál — nikdy ich negeneruj ani neupravuj.**
+   Zadky stiahni zo stránky tak, aby boli pôvodné a spárované s capmi. Ak
+   zdroj poskytuje per-cap originálne zadky, stiahni ich všetky a spáruj podľa
+   čísla. Ak zdroj má len jeden originálny sken zadku pre celý set (napr.
+   milkcapmania), spáruj **tento jeden originál** ku každému capu. Keď originály
+   nie sú na zdroji, **najprv pohľadaj iný zdroj** s originálnymi skenmi; až keď
+   neexistujú, použij jediný dostupný originál. (Žiadne dokresľovanie čísel.)
 3. Seed skript danej kolekcie nech mapuje obrázky podľa čísla capu z manifestu
    (`imageUrl` z `/pogs/<slug>/…`) a **vždy nastaví aj `imageBackUrl`** na
-   vlastný zadok daného capu (`/pogs/<slug>/<n>-back.png`). Placeholder /
-   spoločnú šablónu použij len ako fallback.
-4. Stiahnuté aj vygenerované obrázky (predné aj zadné) **commitni** do repozitára.
+   stiahnutý originálny zadok. Placeholder použij len ako fallback.
+4. Stiahnuté obrázky (predné aj zadné) **commitni** do repozitára.
+
+## Duplikáty / počet kusov (DÔLEŽITÉ)
+
+Fotka na vytvorenie katalógu **môže obsahovať duplikáty** — to je v poriadku.
+Pri každom cape sleduj **počet kusov**, ktoré používateľ vlastní:
+
+- Počet kusov je v `UserCollection.quantity` (1 = jeden kus, >1 = duplikáty).
+- Seed kolekcie nech zapisuje počet kusov podľa fotky (vzor: `OWNED_COUNTS`
+  v `scripts/seed-toy-story.ts`).
+- V UI sa počet zobrazuje na karte/zozname (štítok „N× kusy", badge „Mám ×N“),
+  dá sa upraviť v `OwnershipEditor` a súhrn duplikátov je na dashboarde.
 
 ## Vetvy
 

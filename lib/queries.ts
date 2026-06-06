@@ -94,10 +94,12 @@ function attachOwnership(
   map: Map<string, UserCollection>
 ): PogWithOwnership {
   const ownership = map.get(pog._id) ?? null;
+  const isOwned = ownership?.owned === true;
   return {
     ...pog,
     ownership,
-    isOwned: ownership?.owned === true,
+    isOwned,
+    quantity: isOwned ? ownership?.quantity ?? 1 : 0,
   };
 }
 
@@ -190,11 +192,23 @@ export async function getSimilarPogs(
 /** Dashboard štatistiky. */
 export async function getDashboardStats(): Promise<DashboardStats> {
   await dbConnect();
-  const [pogs, ownedSet, collectionCount] = await Promise.all([
+  const [pogs, ownedSet, collectionCount, ownedRecords] = await Promise.all([
     PogModel.find({}).select("price name rarity number imageUrl").lean(),
     getOwnedPogIdSet(),
     CollectionModel.countDocuments({}),
+    UserCollectionModel.find({ owned: true }).select("quantity").lean(),
   ]);
+
+  // Duplikáty: koľko capov mám vo viac kusoch a koľko je „prebytočných" kusov.
+  let duplicateKinds = 0;
+  let duplicatePieces = 0;
+  for (const r of ownedRecords as any[]) {
+    const q = r.quantity ?? 1;
+    if (q > 1) {
+      duplicateKinds += 1;
+      duplicatePieces += q - 1;
+    }
+  }
 
   const totalPogs = pogs.length;
   let totalValue = 0;
@@ -229,6 +243,8 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     missingCount,
     completeness,
     collectionCount,
+    duplicateKinds,
+    duplicatePieces,
     rarest,
   };
 }
