@@ -23,11 +23,17 @@ obrázky** (nie placeholder) tak ako doteraz — **vrátane zadných strán capo
    milkcapmania.co.uk) a spusti `npm run scrape` — obrázky (predné aj „Back"
    dizajny) pôjdu do `public/pogs/<slug>/` a zapíšu sa do
    `scripts/milkcapmania-data.json`.
-2. Seed skript danej kolekcie nech mapuje obrázky podľa čísla capu z manifestu
-   (`imageUrl` z `/pogs/<slug>/…`) a **vždy nastaví aj `imageBackUrl`** zo
-   „Back" dizajnu setu (spoločná zadná strana, prípadne podľa vzácnosti).
-   Placeholder použij len ako fallback.
-3. Stiahnuté obrázky (predné aj zadné) **commitni** do repozitára.
+2. **Každý cap musí mať svoju vlastnú zadnú stranu** — nikdy nepoužívaj jednu
+   spoločnú pre celý set. Zadky stiahni zo stránky; ak zdroj poskytuje len
+   jednu šablónu zadku (napr. milkcapmania má naskenovaný jeden exemplár
+   s vytlačeným číslom), **vygeneruj z nej zadok pre každé číslo** (pôvodné
+   číslo prebij a vykresli správne) — vzor: `scripts/generate-toy-story-backs.ts`,
+   výstup `public/pogs/<slug>/<n>-back.png`.
+3. Seed skript danej kolekcie nech mapuje obrázky podľa čísla capu z manifestu
+   (`imageUrl` z `/pogs/<slug>/…`) a **vždy nastaví aj `imageBackUrl`** na
+   vlastný zadok daného capu (`/pogs/<slug>/<n>-back.png`). Placeholder /
+   spoločnú šablónu použij len ako fallback.
+4. Stiahnuté aj vygenerované obrázky (predné aj zadné) **commitni** do repozitára.
 
 ## Vetvy
 
