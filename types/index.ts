@@ -33,6 +33,7 @@ export interface UserCollection {
   _id: string;
   pogId: string | Pog;
   owned: boolean;
+  quantity?: number; // počet kusov (duplikáty)
   condition?: Condition;
   acquiredDate?: string;
   paidPrice?: number; // v centoch
@@ -45,6 +46,7 @@ export interface UserCollection {
 export interface PogWithOwnership extends Pog {
   ownership?: UserCollection | null;
   isOwned: boolean;
+  quantity: number; // počet vlastnených kusov (0 = nemám)
 }
 
 /** Kolekcia obohatená o štatistiky */
@@ -65,5 +67,7 @@ export interface DashboardStats {
   missingCount: number;
   completeness: number; // 0–100
   collectionCount: number;
+  duplicateKinds: number; // počet capov, ktoré mám vo viac kusoch
+  duplicatePieces: number; // počet „prebytočných" kusov (na výmenu)
   rarest: Pog[];
 }

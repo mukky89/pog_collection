@@ -7,6 +7,7 @@ import {
   PackageCheck,
   PackageX,
   PieChart,
+  Layers,
   type LucideIcon,
 } from "lucide-react";
 
@@ -82,7 +83,7 @@ export function StatsPanel({ stats }: { stats: DashboardStats }) {
             </span>
           </div>
           <Progress value={stats.completeness} className="h-4" />
-          <div className="grid grid-cols-2 gap-4 pt-2">
+          <div className="grid grid-cols-2 gap-4 pt-2 sm:grid-cols-3">
             <div className="rounded-xl border-2 border-emerald-200 bg-emerald-50 p-3">
               <p className="text-xs font-medium text-muted-foreground">
                 Vlastnené
@@ -97,6 +98,17 @@ export function StatsPanel({ stats }: { stats: DashboardStats }) {
               </p>
               <p className="text-lg font-extrabold text-orange-700">
                 {formatPrice(stats.missingValue)}
+              </p>
+            </div>
+            <div className="col-span-2 rounded-xl border-2 border-amber-200 bg-amber-50 p-3 sm:col-span-1">
+              <p className="flex items-center gap-1 text-xs font-medium text-muted-foreground">
+                <Layers className="h-3.5 w-3.5" /> Duplikáty (na výmenu)
+              </p>
+              <p className="text-lg font-extrabold text-amber-700">
+                {stats.duplicatePieces} ks
+              </p>
+              <p className="text-xs text-muted-foreground">
+                z {stats.duplicateKinds} capov
               </p>
             </div>
           </div>
