@@ -12,17 +12,32 @@ import {
   RARITY_RING,
   cn,
 } from "@/lib/utils";
-import { Check } from "lucide-react";
+import { Check, X } from "lucide-react";
 import type { PogWithOwnership } from "@/types";
 
 export function PogCard({ pog }: { pog: PogWithOwnership }) {
+  const owned = pog.isOwned;
   return (
-    <Card className="group flex animate-pop-in flex-col overflow-hidden border-2 pog-shadow-hover">
+    <Card
+      className={cn(
+        "group flex animate-pop-in flex-col overflow-hidden border-2 pog-shadow-hover",
+        owned
+          ? "border-emerald-400/60"
+          : "border-dashed border-muted-foreground/30 bg-muted/30"
+      )}
+    >
       <Link
         href={`/pogs/${pog._id}`}
         className="pog-flip relative block aspect-square overflow-hidden bg-secondary"
       >
-        <div className="pog-flip-inner absolute inset-2">
+        <div
+          className={cn(
+            "pog-flip-inner absolute inset-2 transition duration-300",
+            // Nevlastnené capy stlmíme do šedej; na hover sa farba obnoví.
+            !owned &&
+              "opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0"
+          )}
+        >
           <div
             className={cn(
               "pog-face overflow-hidden rounded-full ring-4 ring-offset-2 ring-offset-card",
@@ -63,12 +78,19 @@ export function PogCard({ pog }: { pog: PogWithOwnership }) {
         >
           {RARITY_LABELS[pog.rarity]}
         </span>
-        {pog.isOwned && (
+        {owned ? (
           <Badge
             variant="success"
             className="absolute right-2 top-2 z-10 gap-1 shadow-sm"
           >
             <Check className="h-3 w-3" /> Mám
+          </Badge>
+        ) : (
+          <Badge
+            variant="secondary"
+            className="absolute right-2 top-2 z-10 gap-1 border border-muted-foreground/30 text-muted-foreground shadow-sm"
+          >
+            <X className="h-3 w-3" /> Nemám
           </Badge>
         )}
       </Link>
