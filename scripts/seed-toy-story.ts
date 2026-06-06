@@ -39,6 +39,16 @@ const SLUG = "toy-story-panini-caps";
 const PLACEHOLDER = "/placeholder-pog.svg";
 
 /**
+ * Trhové ceny (v centoch) — odhad z porovnateľných Panini tazo/caps setov
+ * (jednotlivé capy sa predávajú ~€0,50–€3, kompletka ~£15–40). Presné ceny
+ * za konkrétne číslo nie sú nikde zverejnené, takže ide o orientačné hodnoty.
+ *   • bežný cap (#9–#78): €1,00
+ *   • slammer (#1–#8, holografický, farebné varianty): €3,00
+ */
+const PRICE_CAP = 100;
+const PRICE_SLAMMER = 300;
+
+/**
  * Capy, ktoré reálne vlastním a koľko KUSOV (prečítané z fotky zbierky —
  * fotka môže obsahovať duplikáty). Číslo = počet kusov daného capu.
  * Capy neuvedené tu = nemám (0 kusov).
@@ -106,6 +116,7 @@ async function upsertPog(args: {
   name: string;
   number: number;
   rarity: "common" | "uncommon" | "rare" | "ultra-rare";
+  price: number; // v centoch
   imageUrl: string;
   imageBackUrl?: string;
   quantity: number; // počet kusov; 0 = nemám
@@ -118,6 +129,7 @@ async function upsertPog(args: {
         collectionId: args.collectionId,
         number: args.number,
         rarity: args.rarity,
+        price: args.price,
         imageUrl: args.imageUrl,
         imageBackUrl: args.imageBackUrl,
       },
@@ -185,6 +197,7 @@ async function run() {
       name,
       number: n,
       rarity: isSlammer ? "rare" : "common",
+      price: isSlammer ? PRICE_SLAMMER : PRICE_CAP,
       imageUrl: visual?.image ?? PLACEHOLDER,
       // Originálna zadná strana zo stránky (spoločná pre set, nie generovaná).
       imageBackUrl: back ?? PLACEHOLDER,
