@@ -17,14 +17,17 @@ po nasadení (Railway buildne z `main`) je nová verzia hneď viditeľná.
 ## Obrázky pre pogy (DÔLEŽITÉ)
 
 Pri pridávaní **akejkoľvek novej kolekcie / pogov** vždy stiahni aj **reálne
-obrázky** (nie placeholder) tak ako doteraz:
+obrázky** (nie placeholder) tak ako doteraz — **vrátane zadných strán capov**:
 
 1. Pridaj set do `SETS` v `scripts/scrape-milkcapmania.ts` (zdroj
-   milkcapmania.co.uk) a spusti `npm run scrape` — obrázky pôjdu do
-   `public/pogs/<slug>/` a zapíšu sa do `scripts/milkcapmania-data.json`.
+   milkcapmania.co.uk) a spusti `npm run scrape` — obrázky (predné aj „Back"
+   dizajny) pôjdu do `public/pogs/<slug>/` a zapíšu sa do
+   `scripts/milkcapmania-data.json`.
 2. Seed skript danej kolekcie nech mapuje obrázky podľa čísla capu z manifestu
-   (`imageUrl` z `/pogs/<slug>/…`), a placeholder použije len ako fallback.
-3. Stiahnuté obrázky **commitni** do repozitára.
+   (`imageUrl` z `/pogs/<slug>/…`) a **vždy nastaví aj `imageBackUrl`** zo
+   „Back" dizajnu setu (spoločná zadná strana, prípadne podľa vzácnosti).
+   Placeholder použij len ako fallback.
+3. Stiahnuté obrázky (predné aj zadné) **commitni** do repozitára.
 
 ## Vetvy
 
