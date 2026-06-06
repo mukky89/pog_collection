@@ -35,6 +35,13 @@ type SetConfig = {
 
 const SETS: SetConfig[] = [
   {
+    path: "/Panini-Caps/493-Toy-Story.html",
+    slug: "toy-story-panini-caps",
+    name: "Toy Story Panini Caps",
+    year: 1996,
+    manufacturer: "Panini",
+  },
+  {
     path: "/250-Brilliant-Frogs-Limited-Edition-Series-1.html",
     slug: "brilliant-frogs-series-1",
     name: "Brilliant Frogs Limited Edition Series 1",
