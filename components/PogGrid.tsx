@@ -112,6 +112,11 @@ export function PogGrid({
                       Nemám
                     </span>
                   )}
+                  {pog.quantity > 1 && (
+                    <span className="ml-2 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-700">
+                      {pog.quantity}× kusy
+                    </span>
+                  )}
                 </p>
               </div>
               <span

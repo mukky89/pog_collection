@@ -10,6 +10,8 @@ const UserCollectionSchema = new Schema(
       index: true,
     },
     owned: { type: Boolean, default: true },
+    // Počet vlastnených kusov daného capu (duplikáty). 1 = mám jeden kus.
+    quantity: { type: Number, default: 1, min: 0 },
     condition: {
       type: String,
       enum: ["mint", "good", "fair", "poor"],

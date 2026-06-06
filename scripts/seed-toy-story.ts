@@ -13,7 +13,8 @@
  * Reálne obrázky a názvy capov sa berú z manifestu `milkcapmania-data.json`
  * (vytvorený cez `npm run scrape`). Slammery #1–#8 na stránke nie sú, takže
  * dostanú placeholder. Vlastnené kusy sú prečítané z fotky zbierky
- * (`OWNED_CAPS`); slammery na fotke nie sú, takže ostávajú ako chýbajúce.
+ * (`OWNED_COUNTS`, vrátane počtu kusov/duplikátov); slammery na fotke nie sú,
+ * takže ostávajú ako chýbajúce.
  *
  * Spustenie:  npm run seed:toy-story  (najprv `npm run scrape`)
  */
@@ -37,12 +38,18 @@ import UserCollectionModel from "../lib/models/UserCollection";
 const SLUG = "toy-story-panini-caps";
 const PLACEHOLDER = "/placeholder-pog.svg";
 
-/** Capy, ktoré reálne vlastním (prečítané z fotky zbierky). */
-const OWNED_CAPS = new Set<number>([
-  9, 15, 17, 21, 22, 23, 29, 30, 31, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
-  43, 44, 50, 51, 54, 55, 56, 58, 59, 60, 62, 63, 66, 68, 69, 70, 72, 73, 74,
-  75, 76, 77, 78,
-]);
+/**
+ * Capy, ktoré reálne vlastním a koľko KUSOV (prečítané z fotky zbierky —
+ * fotka môže obsahovať duplikáty). Číslo = počet kusov daného capu.
+ * Capy neuvedené tu = nemám (0 kusov).
+ */
+const OWNED_COUNTS: Record<number, number> = {
+  9: 1, 15: 1, 17: 2, 21: 2, 22: 1, 23: 1, 29: 1, 30: 1, 31: 1, 33: 1,
+  34: 2, 35: 2, 36: 2, 37: 1, 38: 2, 39: 1, 40: 2, 41: 1, 42: 1, 43: 2,
+  44: 1, 50: 1, 51: 1, 54: 2, 55: 2, 56: 2, 58: 1, 59: 1, 60: 1, 62: 1,
+  63: 1, 66: 1, 68: 1, 69: 1, 70: 1, 72: 1, 73: 3, 74: 1, 75: 1, 76: 2,
+  77: 1, 78: 2,
+};
 
 type Visual = { name: string; image: string };
 
@@ -101,7 +108,7 @@ async function upsertPog(args: {
   rarity: "common" | "uncommon" | "rare" | "ultra-rare";
   imageUrl: string;
   imageBackUrl?: string;
-  owned: boolean;
+  quantity: number; // počet kusov; 0 = nemám
 }) {
   const pog = await PogModel.findOneAndUpdate(
     { collectionId: args.collectionId, number: args.number },
@@ -118,10 +125,17 @@ async function upsertPog(args: {
     { upsert: true, new: true, setDefaultsOnInsert: true }
   );
 
-  if (args.owned) {
+  if (args.quantity > 0) {
     await UserCollectionModel.findOneAndUpdate(
       { pogId: pog._id },
-      { $set: { pogId: pog._id, owned: true, condition: "good" } },
+      {
+        $set: {
+          pogId: pog._id,
+          owned: true,
+          quantity: args.quantity,
+          condition: "good",
+        },
+      },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
   }
@@ -153,6 +167,7 @@ async function run() {
 
   let owned = 0;
   let withImage = 0;
+  let pieces = 0;
   for (let n = 1; n <= 78; n++) {
     const isSlammer = n <= 8;
     const visual = fronts.get(n);
@@ -160,29 +175,26 @@ async function run() {
     const name =
       visual?.name ||
       (isSlammer ? `Toy Story Slammer #${n}` : `Toy Story Cap #${n}`);
-    // Slammery nie sú na fotke → chýbajú. Capy podľa OWNED_CAPS.
-    const isOwned = !isSlammer && OWNED_CAPS.has(n);
-    if (isOwned) owned++;
-    // Každý cap má vlastnú zadnú stranu s jeho číslom (vygenerovanú cez
-    // `npm run backs:toy-story`). Slammery #1–#8 zadok s číslom nemajú →
-    // fallback na spoločnú šablónu / placeholder.
-    const imageBackUrl = isSlammer
-      ? back ?? PLACEHOLDER
-      : `/pogs/${SLUG}/${n}-back.png`;
+    // Slammery nie sú na fotke → 0 kusov. Capy podľa OWNED_COUNTS (vrátane
+    // duplikátov).
+    const quantity = isSlammer ? 0 : OWNED_COUNTS[n] ?? 0;
+    if (quantity > 0) owned++;
+    pieces += quantity;
     await upsertPog({
       collectionId: toyStory._id,
       name,
       number: n,
       rarity: isSlammer ? "rare" : "common",
       imageUrl: visual?.image ?? PLACEHOLDER,
-      imageBackUrl,
-      owned: isOwned,
+      // Originálna zadná strana zo stránky (spoločná pre set, nie generovaná).
+      imageBackUrl: back ?? PLACEHOLDER,
+      quantity,
     });
   }
   console.log(
     `Toy Story Panini Caps: 78 capov (s obrázkom ${withImage}, ` +
-      `vlastná zadná strana #9–#78, ` +
-      `vlastnených ${owned}, chýba ${78 - owned}).`
+      `vlastnených ${owned} (${pieces} ks vrátane duplikátov), ` +
+      `chýba ${78 - owned}).`
   );
 
   console.log("Hotovo! ✅");

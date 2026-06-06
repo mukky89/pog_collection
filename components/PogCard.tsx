@@ -84,6 +84,11 @@ export function PogCard({ pog }: { pog: PogWithOwnership }) {
             className="absolute right-2 top-2 z-10 gap-1 shadow-sm"
           >
             <Check className="h-3 w-3" /> Mám
+            {pog.quantity > 1 && (
+              <span className="ml-0.5 rounded-full bg-white/30 px-1 font-bold">
+                ×{pog.quantity}
+              </span>
+            )}
           </Badge>
         ) : (
           <Badge
@@ -105,6 +110,14 @@ export function PogCard({ pog }: { pog: PogWithOwnership }) {
             </Link>
             <p className="text-xs font-medium text-muted-foreground">
               #{pog.number}
+              {pog.quantity > 1 && (
+                <span
+                  className="ml-2 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-700"
+                  title={`Mám ${pog.quantity} kusy/kusov tohto capu`}
+                >
+                  {pog.quantity}× kusy
+                </span>
+              )}
             </p>
           </div>
           <span className="shrink-0 rounded-full bg-accent px-2 py-0.5 text-sm font-extrabold text-accent-foreground">

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { OwnedToggle } from "@/components/OwnedToggle";
-import { Loader2, Save } from "lucide-react";
+import { Loader2, Save, Plus, Minus } from "lucide-react";
 import type { UserCollection } from "@/types";
 
 export function OwnershipEditor({
@@ -28,6 +28,7 @@ export function OwnershipEditor({
     ownership?.acquiredDate ? ownership.acquiredDate.slice(0, 10) : ""
   );
   const [notes, setNotes] = React.useState(ownership?.notes ?? "");
+  const [quantity, setQuantity] = React.useState(ownership?.quantity ?? 1);
   const [saving, setSaving] = React.useState(false);
   const [saved, setSaved] = React.useState(false);
 
@@ -40,6 +41,7 @@ export function OwnershipEditor({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           owned: true,
+          quantity: Math.max(1, Math.round(quantity) || 1),
           condition: condition || undefined,
           paidPrice: paidPrice
             ? Math.round(parseFloat(paidPrice.replace(",", ".")) * 100)
@@ -67,6 +69,44 @@ export function OwnershipEditor({
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
+        <div className="space-y-1 sm:col-span-2">
+          <label className="text-xs text-muted-foreground">
+            Počet kusov (duplikáty)
+          </label>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="h-9 w-9 shrink-0"
+              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+              aria-label="Znížiť počet"
+            >
+              <Minus className="h-4 w-4" />
+            </Button>
+            <Input
+              type="number"
+              min="1"
+              step="1"
+              className="w-20 text-center"
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="h-9 w-9 shrink-0"
+              onClick={() => setQuantity((q) => q + 1)}
+              aria-label="Zvýšiť počet"
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
+            <span className="text-xs text-muted-foreground">
+              {quantity > 1 ? `mám ${quantity} kusy/kusov` : "mám 1 kus"}
+            </span>
+          </div>
+        </div>
         <div className="space-y-1">
           <label className="text-xs text-muted-foreground">Podmienka</label>
           <Select
