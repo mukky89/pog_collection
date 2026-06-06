@@ -46,17 +46,25 @@ const OWNED_CAPS = new Set<number>([
 
 type Visual = { name: string; image: string };
 
-/** Z manifestu zostav mapu číslo capu -> { názov, obrázok }. */
-function loadVisuals(): Map<number, Visual> {
-  const map = new Map<number, Visual>();
+/**
+ * Z manifestu zostav mapu číslo capu -> { názov, predný obrázok } a zároveň
+ * spoločnú **zadnú stranu** capu (katalógový „Back" dizajn).
+ */
+function loadVisuals(): { fronts: Map<number, Visual>; back?: string } {
+  const fronts = new Map<number, Visual>();
+  let back: string | undefined;
+  const isBack = (p: any) =>
+    p.number === 0 || /^back\b/i.test(String(p.name).trim());
   try {
     const file = join(process.cwd(), "scripts", "milkcapmania-data.json");
     const manifest = JSON.parse(readFileSync(file, "utf-8"));
     const coll = manifest.collections?.find((c: any) => c.slug === SLUG);
     for (const p of coll?.pogs ?? []) {
-      // Preskoč katalógový „Back" (číslo 0) a neprepisuj už uloženú variantu.
-      if (p.number > 0 && !map.has(p.number)) {
-        map.set(p.number, { name: p.name, image: p.image });
+      if (isBack(p)) {
+        back = back ?? p.image; // spoločná zadná strana pre celý set
+      } else if (!fronts.has(p.number)) {
+        // neprepisuj už uloženú variantu (niektoré čísla majú viac dizajnov)
+        fronts.set(p.number, { name: p.name, image: p.image });
       }
     }
   } catch {
@@ -65,7 +73,7 @@ function loadVisuals(): Map<number, Visual> {
         "Spusti najprv: npm run scrape"
     );
   }
-  return map;
+  return { fronts, back };
 }
 
 /** Vytvorí/aktualizuje kolekciu a vráti jej dokument. */
@@ -92,6 +100,7 @@ async function upsertPog(args: {
   number: number;
   rarity: "common" | "uncommon" | "rare" | "ultra-rare";
   imageUrl: string;
+  imageBackUrl?: string;
   owned: boolean;
 }) {
   const pog = await PogModel.findOneAndUpdate(
@@ -103,6 +112,7 @@ async function upsertPog(args: {
         number: args.number,
         rarity: args.rarity,
         imageUrl: args.imageUrl,
+        imageBackUrl: args.imageBackUrl,
       },
     },
     { upsert: true, new: true, setDefaultsOnInsert: true }
@@ -122,13 +132,13 @@ async function run() {
   const uri = process.env.MONGODB_URI;
   if (!uri) throw new Error("Chýba MONGODB_URI");
 
-  const visuals = loadVisuals();
+  const { fronts, back } = loadVisuals();
 
   await mongoose.connect(uri);
   console.log("Pripojené k databáze.");
 
   // Obal kolekcie = prvý reálny obrázok capu (fallback placeholder).
-  const cover = visuals.get(9)?.image ?? visuals.values().next().value?.image;
+  const cover = fronts.get(9)?.image ?? fronts.values().next().value?.image;
 
   const toyStory = await upsertCollection({
     name: "Toy Story Panini Caps",
@@ -145,7 +155,7 @@ async function run() {
   let withImage = 0;
   for (let n = 1; n <= 78; n++) {
     const isSlammer = n <= 8;
-    const visual = visuals.get(n);
+    const visual = fronts.get(n);
     if (visual) withImage++;
     const name =
       visual?.name ||
@@ -159,11 +169,13 @@ async function run() {
       number: n,
       rarity: isSlammer ? "rare" : "common",
       imageUrl: visual?.image ?? PLACEHOLDER,
+      imageBackUrl: back, // spoločná zadná strana setu
       owned: isOwned,
     });
   }
   console.log(
     `Toy Story Panini Caps: 78 capov (s obrázkom ${withImage}, ` +
+      `zadná strana ${back ? "✔" : "—"}, ` +
       `vlastnených ${owned}, chýba ${78 - owned}).`
   );
 
