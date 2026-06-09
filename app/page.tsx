@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { StatsPanel } from "@/components/StatsPanel";
 import { CollectionCard } from "@/components/CollectionCard";
+import { PogMascot } from "@/components/PogMascot";
 import { Card, CardContent } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { DbErrorState, EmptyState } from "@/components/EmptyState";
@@ -52,13 +52,7 @@ export default async function DashboardPage() {
       <div className="pog-burst relative overflow-hidden rounded-3xl border-2 border-foreground/10 p-6 sm:p-8">
         <div className="relative z-10 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div className="flex items-center gap-4">
-            <Image
-              src="/logo.svg"
-              alt=""
-              width={64}
-              height={64}
-              className="animate-spin-slow drop-shadow"
-            />
+            <PogMascot className="h-20 w-20 shrink-0 drop-shadow sm:h-24 sm:w-24" />
             <div>
               <h1 className="text-3xl font-extrabold sm:text-4xl">
                 <span className="pog-gradient-text">POG</span> Dashboard
