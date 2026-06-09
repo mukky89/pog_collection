@@ -54,6 +54,8 @@ export function FilterBar({
       <div className="relative min-w-[200px] flex-1">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
+          type="search"
+          aria-label="Hľadať POG podľa názvu"
           placeholder="Hľadať podľa názvu..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -63,6 +65,7 @@ export function FilterBar({
 
       {showCollectionFilter && (
         <Select
+          aria-label="Filtrovať podľa série"
           className="w-auto min-w-[160px]"
           value={params.get("collectionId") ?? ""}
           onChange={(e) => update("collectionId", e.target.value)}
@@ -77,6 +80,7 @@ export function FilterBar({
       )}
 
       <Select
+        aria-label="Filtrovať podľa vzácnosti"
         className="w-auto min-w-[140px]"
         value={params.get("rarity") ?? ""}
         onChange={(e) => update("rarity", e.target.value)}
@@ -89,6 +93,7 @@ export function FilterBar({
       </Select>
 
       <Select
+        aria-label="Filtrovať podľa vlastníctva"
         className="w-auto min-w-[130px]"
         value={params.get("owned") ?? ""}
         onChange={(e) => update("owned", e.target.value)}
@@ -99,6 +104,7 @@ export function FilterBar({
       </Select>
 
       <Select
+        aria-label="Zoradiť POG"
         className="w-auto min-w-[150px]"
         value={params.get("sort") ?? ""}
         onChange={(e) => update("sort", e.target.value)}

@@ -52,6 +52,9 @@ export function OwnedToggle({
       variant={owned ? "default" : "outline"}
       onClick={toggle}
       disabled={pending}
+      aria-pressed={owned}
+      aria-busy={pending}
+      aria-label={owned ? "Mám tento POG — klikni pre odobranie" : "Chýba mi — klikni pre pridanie"}
       className={cn(
         owned &&
           "bg-emerald-500 shadow-[0_4px_0_0_#0a7a52] hover:bg-emerald-500 hover:brightness-105 active:shadow-[0_1px_0_0_#0a7a52]",
