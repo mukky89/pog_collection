@@ -12,7 +12,7 @@
  * Rešpektujeme `Crawl-delay: 3` z robots.txt — medzi načítaním HTML stránok
  * setov čakáme 3 s, medzi sťahovaním jednotlivých obrázkov krátku pauzu.
  */
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, writeFile, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import sharp from "sharp";
 
@@ -183,8 +183,17 @@ async function scrapeSet(cfg: SetConfig): Promise<CollectionEntry> {
 }
 
 async function run() {
+  // Voliteľný filter: SCRAPE_ONLY=slug1,slug2 stiahne len vybrané sety
+  // (užitočné pri pridaní novej kolekcie, nech sa zbytočne nesťahujú ostatné).
+  const only = (process.env.SCRAPE_ONLY ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const sets = only.length ? SETS.filter((s) => only.includes(s.slug)) : SETS;
+  if (only.length) console.log(`Filter SCRAPE_ONLY: ${sets.map((s) => s.slug).join(", ")}`);
+
   const collections: CollectionEntry[] = [];
-  for (const [i, cfg] of SETS.entries()) {
+  for (const [i, cfg] of sets.entries()) {
     if (i > 0) await sleep(3000); // rešpektuj Crawl-delay: 3
     try {
       collections.push(await scrapeSet(cfg));
@@ -193,12 +202,28 @@ async function run() {
     }
   }
 
+  const outFile = join(process.cwd(), "scripts", "milkcapmania-data.json");
+
+  // Pri filtrovanom behu (SCRAPE_ONLY) zlúč nové výsledky s existujúcim
+  // manifestom, aby sme neprišli o ostatné kolekcie.
+  let merged: CollectionEntry[] = collections;
+  if (only.length) {
+    try {
+      const prev = JSON.parse(await readFile(outFile, "utf-8"));
+      const prevColls: CollectionEntry[] = prev.collections ?? [];
+      const bySlug = new Map(prevColls.map((c) => [c.slug, c]));
+      for (const c of collections) bySlug.set(c.slug, c); // prepíš/pridaj
+      merged = Array.from(bySlug.values());
+    } catch {
+      /* manifest ešte neexistuje — použijeme len nové */
+    }
+  }
+
   const manifest = {
     source: "https://www.milkcapmania.co.uk",
     scrapedAt: new Date().toISOString().slice(0, 10),
-    collections,
+    collections: merged,
   };
-  const outFile = join(process.cwd(), "scripts", "milkcapmania-data.json");
   await writeFile(outFile, JSON.stringify(manifest, null, 2) + "\n");
   const total = collections.reduce((s, c) => s + c.pogs.length, 0);
   console.log(

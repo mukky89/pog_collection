@@ -1,6 +1,6 @@
 {
   "name": "pog-collector",
-  "version": "1.13.1",
+  "version": "1.14.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,6 +10,7 @@
     "scrape": "tsx scripts/scrape-milkcapmania.ts",
     "seed": "tsx scripts/seed.ts",
     "seed:toy-story": "tsx scripts/seed-toy-story.ts",
+    "seed:undefined": "tsx scripts/seed-undefined.ts",
     "reset-ownership": "tsx scripts/reset-ownership.ts"
   },
   "dependencies": {
