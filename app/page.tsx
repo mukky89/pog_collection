@@ -12,7 +12,7 @@ import {
   RARITY_STYLES,
   cn,
 } from "@/lib/utils";
-import { ArrowRight, Crown } from "lucide-react";
+import { ArrowRight, Crown, Library } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -81,7 +81,10 @@ export default async function DashboardPage() {
       <StatsPanel stats={stats} />
 
       <section className="space-y-4">
-        <h2 className="text-2xl font-extrabold">👑 Najvzácnejšie kusy</h2>
+        <h2 className="flex items-center gap-2 text-2xl font-extrabold">
+          <Crown className="h-6 w-6 text-amber-500" aria-hidden="true" />
+          Najvzácnejšie kusy
+        </h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {stats.rarest.map((pog) => (
             <Link key={pog._id} href={`/pogs/${pog._id}`}>
@@ -109,7 +112,10 @@ export default async function DashboardPage() {
 
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-extrabold">📚 Kolekcie</h2>
+          <h2 className="flex items-center gap-2 text-2xl font-extrabold">
+            <Library className="h-6 w-6 text-primary" aria-hidden="true" />
+            Kolekcie
+          </h2>
           <Link
             href="/collections"
             className="text-sm font-bold text-primary hover:underline"

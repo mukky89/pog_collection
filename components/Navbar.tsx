@@ -40,8 +40,9 @@ export function Navbar() {
               <Link
                 key={href}
                 href={href}
+                aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex items-center gap-2 rounded-full px-3.5 py-2 text-sm font-bold transition-all",
+                  "flex items-center gap-2 rounded-full px-3.5 py-2 text-sm font-bold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                   active
                     ? "bg-primary text-primary-foreground pog-shadow"
                     : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
