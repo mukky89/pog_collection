@@ -54,6 +54,44 @@
   h3 {
     @apply tracking-tight;
   }
+
+  /* Klávesnicová navigácia — viditeľný focus na všetkých interaktívnych prvkoch
+     (WCAG AA). Myšou (focus bez :focus-visible) sa krúžok neukazuje. */
+  a:focus-visible,
+  button:focus-visible,
+  [role="button"]:focus-visible,
+  [tabindex]:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+    border-radius: var(--radius);
+  }
+
+  /* Kurzor „pointer" na všetkých klikateľných prvkoch. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  label[for],
+  summary {
+    cursor: pointer;
+  }
+}
+
+/* Prístupnosť: rešpektuj „prefers-reduced-motion" — pri redukcii pohybu
+   vypneme dekoratívne animácie aj prudké prechody. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .group:hover .pog-flip-inner,
+  .pog-coin-inner.is-flipped {
+    transform: none !important;
+  }
 }
 
 /* ---------- Progress bar ---------- */
