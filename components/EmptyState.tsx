@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { PogMascot } from "@/components/PogMascot";
 
 export function EmptyState({
   title,
@@ -16,6 +17,7 @@ export function EmptyState({
   return (
     <Card>
       <CardContent className="flex flex-col items-center gap-3 p-12 text-center">
+        <PogMascot className="h-24 w-24" />
         <h2 className="text-lg font-semibold">{title}</h2>
         {description && (
           <p className="max-w-md text-sm text-muted-foreground">

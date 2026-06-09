@@ -39,7 +39,7 @@ export async function getCollectionsWithStats(): Promise<CollectionWithStats[]> 
     getOwnedPogIdSet(),
   ]);
 
-  return collections.map((c: any) => {
+  const withStats = collections.map((c: any) => {
     const collectionPogs = pogs.filter(
       (p: any) => String(p.collectionId) === String(c._id)
     );
@@ -67,6 +67,17 @@ export async function getCollectionsWithStats(): Promise<CollectionWithStats[]> 
       totalValue,
       ownedValue,
     };
+  });
+
+  // Kolekcie, ktoré vlastním (mám v nich aspoň 1 cap), idú do popredia;
+  // potom podľa kompletnosti a počtu kusov, nakoniec podľa roku/názvu.
+  return withStats.sort((a, b) => {
+    const aOwned = a.ownedCount > 0 ? 1 : 0;
+    const bOwned = b.ownedCount > 0 ? 1 : 0;
+    if (aOwned !== bOwned) return bOwned - aOwned;
+    if (b.completeness !== a.completeness) return b.completeness - a.completeness;
+    if (b.ownedCount !== a.ownedCount) return b.ownedCount - a.ownedCount;
+    return a.year - b.year || a.name.localeCompare(b.name);
   });
 }
 
